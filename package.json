@@ -1,0 +1,20 @@
+{
+  "name": "db-todo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon ./server/index.js"
+  },
+  "author": "Jim Cramer",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.4",
+    "morgan": "^1.9.1",
+    "mysql": "^2.16.0"
+  },
+  "devDependencies": {
+    "eslint": "^5.10.0",
+    "nodemon": "^1.18.9"
+  }
+}

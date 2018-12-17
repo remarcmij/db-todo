@@ -1,0 +1,44 @@
+body {
+  width: 768px;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: #f8f8f8;
+  font-family: 'Roboto', sans-serif;
+  color: rgb(0, 0, 0, 87%);
+  margin-top: 0;
+}
+
+#container {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+}
+
+@media (max-width: 767px) {
+  body {
+    width: 100%;
+  }
+  #container {
+    margin: 0;
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+p,
+h1,
+h2,
+h3,
+h4 {
+  color: rgb(0, 0, 0, 54%);
+}
+
+.header {
+  color: white;
+  background-color: #3f51b5;
+  padding: 8px 16px;
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
