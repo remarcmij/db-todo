@@ -94,6 +94,7 @@
       class: 'button',
     });
     button.addEventListener('click', clickHandler);
+    return button;
   }
 
   function renderTodoDeleteButton(parent, todo) {
@@ -145,38 +146,59 @@
     });
   }
 
-  function renderEditModal(parent) {
+  function updateSaveButtonState() {
+    const text = ui.editModal.textInput.value;
+    if (text.trim() === '') {
+      ui.editModal.saveButton.setAttribute('disabled', '');
+    } else {
+      ui.editModal.saveButton.removeAttribute('disabled');
+    }
+  }
+
+  function renderEditModalDialog(parent) {
     ui.editModal.overlay = createAndAppend('div', parent, { class: 'modal' });
     const modalContent = createAndAppend('div', ui.editModal.overlay, { class: 'modal-content' });
-    ui.editModal.textInput = createAndAppend('input', modalContent, {
+    ui.editModal.title = createAndAppend('div', modalContent, { class: 'modal-title' });
+    const body = createAndAppend('div', modalContent, { class: 'modal-body' });
+
+    ui.editModal.textInput = createAndAppend('input', body, {
       type: 'text',
-      class: 'edit-text-input margin',
-    });
-    ui.editModal.dateInput = createAndAppend('input', modalContent, {
-      type: 'date',
-      class: 'edit-date-input margin',
+      class: 'edit-text-input',
     });
 
-    renderButton('SAVE', modalContent, () => {
+    ui.editModal.dateInput = createAndAppend('input', body, {
+      type: 'date',
+      class: 'edit-date-input',
+    });
+
+    const buttonContainer = createAndAppend('div', modalContent, {
+      class: 'modal-buttons',
+    });
+
+    ui.editModal.saveButton = renderButton('SAVE', buttonContainer, () => {
       state.currentTodo.description = ui.editModal.textInput.value;
       state.currentTodo.due_date = ui.editModal.dateInput.value;
       ui.editModal.overlay.style.display = 'none';
       persistTodo(state.currentTodo);
     });
 
+    ui.editModal.textInput.addEventListener('input', () => updateSaveButtonState());
+
     window.onclick = event => {
       if (event.target === ui.editModal.overlay) {
-        ui.editModal.style.display = 'none';
+        ui.editModal.overlay.style.display = 'none';
       }
     };
   }
 
   function editTodo(todo = {}) {
     state.currentTodo = todo;
-    ui.editModal.overlay.style.display = 'block';
+    ui.editModal.title.innerText = todo.id ? 'Edit Todo' : 'Add Todo';
     ui.editModal.textInput.value = todo.description || '';
+    updateSaveButtonState();
     const dateString = todo.due_date ? todo.due_date.slice(0, 10) : '';
     ui.editModal.dateInput.value = dateString;
+    ui.editModal.overlay.style.display = 'block';
   }
 
   function renderHeader(header) {
@@ -186,7 +208,11 @@
       fetchAndRenderTodos();
     });
     renderTodosSelect();
-    renderButton('ADD TODO', header, () => editTodo());
+    const button = createAndAppend('button', header, {
+      text: 'ADD TODO',
+      class: 'button',
+    });
+    button.addEventListener('click', () => editTodo());
   }
 
   async function main() {
@@ -194,7 +220,7 @@
     const header = createAndAppend('header', root, { class: 'header' });
     ui.mainContainer = createAndAppend('div', root, { class: 'todos-container' });
 
-    renderEditModal(ui.mainContainer);
+    renderEditModalDialog(ui.mainContainer);
     ui.todoList = createAndAppend('ul', ui.mainContainer);
 
     try {
