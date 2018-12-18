@@ -15,8 +15,7 @@ module.exports = function(conn) {
   async function addTodoItem(req, res) {
     try {
       const { listId } = req.query;
-      const { description } = req.body;
-      const lists = await db.createTodoItem(conn, description, +listId);
+      const lists = await db.createTodoItem(conn, req.body, +listId);
       res.json(lists);
     } catch (err) {
       res.status(500).json(err);
@@ -26,8 +25,7 @@ module.exports = function(conn) {
   async function updateTodoItem(req, res) {
     try {
       const { listId } = req.query;
-      const { description, id } = req.body;
-      const lists = await db.updateTodoItem(conn, description, +id, +listId);
+      const lists = await db.updateTodoItem(conn, req.body, +listId);
       res.json(lists);
     } catch (err) {
       res.status(500).json(err);
@@ -36,7 +34,7 @@ module.exports = function(conn) {
 
   async function deleteTodoItem(req, res) {
     try {
-      const { id } = req.param;
+      const { id } = req.params;
       const { listId } = req.query;
       const lists = await db.deleteTodoItem(conn, +id, +listId);
       res.json(lists);

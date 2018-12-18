@@ -3,7 +3,7 @@ const express = require('express');
 const morgan = require('morgan');
 
 const MyConnection = require('./database/MyConnection.js');
-const seedDb = require('./database/seedDb');
+const seedDb = require('./database/seed-db');
 const todoListsRouter = require('./routes/todo-lists');
 const todoItemsRouter = require('./routes/todo-items');
 
@@ -14,6 +14,7 @@ const CONNECTION_CONFIG = {
   user: 'hyfuser',
   password: 'hyfpassword',
   database: 'todo',
+  timezone: 'utc',
 };
 
 (async () => {
@@ -26,7 +27,7 @@ const CONNECTION_CONFIG = {
   app.use(express.json());
 
   app.use('/lists', todoListsRouter(conn));
-  app.use('/items', todoItemsRouter(conn));
+  app.use('/todos', todoItemsRouter(conn));
 
   app.use(express.static(path.join(__dirname, '../client')));
 

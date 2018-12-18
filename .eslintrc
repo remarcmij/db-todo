@@ -12,9 +12,7 @@
     },
     "sourceType": "module"
   },
-  "extends": [
-    "eslint:recommended"
-  ],
+  "extends": ["eslint:recommended"],
   "rules": {
     "no-const-assign": "warn",
     "no-this-before-super": "warn",
@@ -26,12 +24,9 @@
     "no-var": "warn",
     "prefer-const": "warn",
     "no-multiple-empty-lines": "warn",
-    "eol-last": [
-      "error",
-      "always"
-    ],
+    "eol-last": ["error", "always"],
     "no-console": "off",
-    "camelcase": "warn",
+    "camelcase": "off",
     "eqeqeq": [
       "error",
       "always",
@@ -39,9 +34,6 @@
         "null": "ignore"
       }
     ],
-    "semi": [
-      "warn",
-      "always"
-    ]
+    "semi": ["warn", "always"]
   }
 }
