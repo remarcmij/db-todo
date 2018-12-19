@@ -14,7 +14,7 @@ class View {
     this.mainContainer = Helper.createAndAppend('div', root);
     this.todoListContainer = Helper.createAndAppend('ul', this.mainContainer);
 
-    this.todoEditModal = new TodoEditModal(this.model);
+    this.todoEditModal = new TodoEditModal(todo => this.model.saveTodo(todo));
     this.todoEditModal.render(this.mainContainer);
   }
 

@@ -3,9 +3,8 @@
 
 // eslint-disable-next-line no-unused-vars
 class TodoEditModal {
-  constructor(model, controller) {
-    this.model = model;
-    this.controller = controller;
+  constructor(onSave) {
+    this.onSave = onSave;
     this.todo;
   }
 
@@ -34,7 +33,7 @@ class TodoEditModal {
         description: this.textInput.value,
         due_date: this.dateInput.value,
       });
-      this.model.saveTodo(todo);
+      this.onSave(todo);
       this.overlay.style.display = 'none';
     });
 
