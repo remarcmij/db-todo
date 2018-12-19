@@ -21,8 +21,6 @@ const CONNECTION_CONFIG = {
   timezone: 'utc',
 };
 
-const CLIENTS = ['simple', 'spa', 'oop'];
-
 (async () => {
   const folderName = `client-${process.argv[2] || 'oop'}`;
   const staticPath = path.join(__dirname, `../${folderName}`);
