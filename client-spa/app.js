@@ -1,10 +1,7 @@
 'use strict';
 
 {
-  const ui = {
-    editModal: {},
-  };
-
+  const ui = {};
   const state = {};
 
   function createAndAppend(name, parent, options = {}) {
@@ -145,26 +142,33 @@
   }
 
   function updateSaveButtonState() {
-    const text = ui.editModal.textInput.value;
+    const text = ui.editModalTextInput.value;
     if (text.trim() === '') {
-      ui.editModal.saveButton.setAttribute('disabled', '');
+      ui.editModalSaveButton.setAttribute('disabled', '');
     } else {
-      ui.editModal.saveButton.removeAttribute('disabled');
+      ui.editModalSaveButton.removeAttribute('disabled');
     }
   }
 
+  function handleSave() {
+    state.currentTodo.description = ui.editModalTextInput.value;
+    state.currentTodo.due_date = ui.editModalDateInput.value;
+    ui.editModalOverlay.style.display = 'none';
+    saveTodo(state.currentTodo);
+  }
+
   function renderEditModalDialog(parent) {
-    ui.editModal.overlay = createAndAppend('div', parent, { class: 'modal' });
-    const modalContent = createAndAppend('div', ui.editModal.overlay, { class: 'modal-content' });
-    ui.editModal.title = createAndAppend('div', modalContent, { class: 'modal-title' });
+    ui.editModalOverlay = createAndAppend('div', parent, { class: 'modal' });
+    const modalContent = createAndAppend('div', ui.editModalOverlay, { class: 'modal-content' });
+    ui.editModalTitle = createAndAppend('div', modalContent, { class: 'modal-title' });
     const body = createAndAppend('div', modalContent, { class: 'modal-body' });
 
-    ui.editModal.textInput = createAndAppend('input', body, {
+    ui.editModalTextInput = createAndAppend('input', body, {
       type: 'text',
       class: 'edit-text-input',
     });
 
-    ui.editModal.dateInput = createAndAppend('input', body, {
+    ui.editModalDateInput = createAndAppend('input', body, {
       type: 'date',
       class: 'edit-date-input',
     });
@@ -173,31 +177,25 @@
       class: 'modal-buttons',
     });
 
-    ui.editModal.saveButton = renderButton('SAVE', buttonContainer, () => {
-      state.currentTodo.description = ui.editModal.textInput.value;
-      state.currentTodo.due_date = ui.editModal.dateInput.value;
-      ui.editModal.overlay.style.display = 'none';
-      saveTodo(state.currentTodo);
-    });
-
-    ui.editModal.textInput.addEventListener('input', () => updateSaveButtonState());
+    ui.editModalSaveButton = renderButton('SAVE', buttonContainer, handleSave);
+    ui.editModalTextInput.addEventListener('input', () => updateSaveButtonState());
 
     window.onclick = event => {
-      if (event.target === ui.editModal.overlay) {
-        ui.editModal.overlay.style.display = 'none';
+      if (event.target === ui.editModalOverlay) {
+        ui.editModalOverlay.style.display = 'none';
       }
     };
   }
 
   function editTodo(todo = {}) {
     state.currentTodo = todo;
-    ui.editModal.title.innerText = todo.id ? 'Edit Todo' : 'Add Todo';
-    ui.editModal.textInput.value = todo.description || '';
+    ui.editModalTitle.innerText = todo.id ? 'Edit Todo' : 'Add Todo';
+    ui.editModalTextInput.value = todo.description || '';
     updateSaveButtonState();
     const dateString = todo.due_date ? todo.due_date.slice(0, 10) : '';
-    ui.editModal.dateInput.value = dateString;
-    ui.editModal.overlay.style.display = 'block';
-    ui.editModal.textInput.focus();
+    ui.editModalDateInput.value = dateString;
+    ui.editModalOverlay.style.display = 'block';
+    ui.editModalTextInput.focus();
   }
 
   function renderHeader(root) {
