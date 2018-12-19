@@ -59,11 +59,11 @@
 
     const method = todoData.id ? 'PATCH' : 'POST';
     try {
-      state.todos = await fetchJSON(`/todos?listId=${state.listId}`, {
+      state.todos = await fetchJSON(`/todos`, {
         method,
         body: JSON.stringify(todoData),
       });
-      renderTodos();
+      updateTodoListItems();
     } catch (error) {
       renderError(error);
     }
@@ -106,13 +106,13 @@
         state.todos = await fetchJSON(`/todos/${todo.id}?listId=${state.listId}`, {
           method: 'DELETE',
         });
-        renderTodos();
+        updateTodoListItems();
       }
     });
   }
 
   function renderTodoListItem(todo) {
-    const li = createAndAppend('li', ui.todoList, { class: 'todo-list-item' });
+    const li = createAndAppend('li', ui.todoListContainer, { class: 'todo-list-item' });
     const containerDiv = createAndAppend('div', li, { class: 'todo-list-item-container' });
 
     createAndAppend('div', containerDiv, {
@@ -129,23 +129,18 @@
     renderCheckbox(todo, rightPart);
   }
 
-  function renderTodos() {
-    clearContainer(ui.todoList);
+  function updateTodoListItems() {
+    clearContainer(ui.todoListContainer);
     state.todos.forEach(todo => renderTodoListItem(todo));
   }
 
-  async function fetchAndRenderTodos() {
-    try {
-      state.todos = await fetchJSON(`/todos?listId=${state.listId}`);
-      renderTodos();
-    } catch (error) {
-      renderError(error);
-    }
-  }
-
-  function renderTodosSelect() {
-    state.lists.forEach(list => {
-      createAndAppend('option', ui.select, { value: list.id, text: list.description });
+  function updateListSelectorContent() {
+    clearContainer(ui.listSelector);
+    state.todoLists.forEach(list => {
+      createAndAppend('option', ui.listSelector, {
+        value: list.id,
+        text: list.description,
+      });
     });
   }
 
@@ -202,15 +197,15 @@
     const dateString = todo.due_date ? todo.due_date.slice(0, 10) : '';
     ui.editModal.dateInput.value = dateString;
     ui.editModal.overlay.style.display = 'block';
+    ui.editModal.textInput.focus();
   }
 
-  function renderHeader(header) {
-    ui.select = createAndAppend('select', header, { class: 'todo-list-selector' });
-    ui.select.addEventListener('change', event => {
-      state.listId = event.target.value;
-      fetchAndRenderTodos();
+  function renderHeader(root) {
+    const header = createAndAppend('header', root, { class: 'header' });
+    ui.listSelector = createAndAppend('select', header, { class: 'todo-list-selector' });
+    ui.listSelector.addEventListener('change', event => {
+      fetchAndRenderTodos(event.target.value);
     });
-    renderTodosSelect();
     const button = createAndAppend('button', header, {
       text: 'ADD TODO',
       class: 'button',
@@ -218,19 +213,27 @@
     button.addEventListener('click', () => editTodo());
   }
 
+  async function fetchAndRenderTodos(listId) {
+    state.listId = listId;
+    try {
+      state.todos = await fetchJSON(`/todos?listId=${listId}`);
+      updateTodoListItems();
+    } catch (error) {
+      renderError(error);
+    }
+  }
+
   async function main() {
     const root = document.getElementById('root');
-    const header = createAndAppend('header', root, { class: 'header' });
-    ui.mainContainer = createAndAppend('div', root, { class: 'todos-container' });
-
+    renderHeader(root);
+    ui.mainContainer = createAndAppend('div', root);
+    ui.todoListContainer = createAndAppend('ul', ui.mainContainer);
     renderEditModalDialog(ui.mainContainer);
-    ui.todoList = createAndAppend('ul', ui.mainContainer);
 
     try {
-      state.lists = await fetchJSON('/lists');
-      renderHeader(header);
-      state.listId = state.lists[0].id;
-      fetchAndRenderTodos();
+      state.todoLists = await fetchJSON('/lists');
+      updateListSelectorContent();
+      fetchAndRenderTodos(state.todoLists[0].id);
     } catch (error) {
       renderError(error);
     }

@@ -10,9 +10,8 @@ class View {
 
   renderPage() {
     const root = document.getElementById('root');
-    const header = Helper.createAndAppend('header', root, { class: 'header' });
-    this.renderHeader(header);
-    this.mainContainer = Helper.createAndAppend('div', root, { class: 'todos-container' });
+    this.renderHeader(root);
+    this.mainContainer = Helper.createAndAppend('div', root);
     this.todoListContainer = Helper.createAndAppend('ul', this.mainContainer);
 
     this.todoEditModal = new TodoEditModal(this.model);
@@ -27,7 +26,8 @@ class View {
     });
   }
 
-  renderHeader(header) {
+  renderHeader(root) {
+    const header = Helper.createAndAppend('header', root, { class: 'header' });
     this.listSelector = Helper.createAndAppend('select', header, { class: 'todo-list-selector' });
     this.listSelector.addEventListener('change', event => {
       this.model.loadTodoItems(event.target.value);
