@@ -1,6 +1,10 @@
+const util = require('util');
+const fs = require('fs');
 const path = require('path');
 const express = require('express');
 const morgan = require('morgan');
+
+const stat = util.promisify(fs.stat);
 
 const MyConnection = require('./database/MyConnection.js');
 const seedDb = require('./database/seed-db');
@@ -17,7 +21,16 @@ const CONNECTION_CONFIG = {
   timezone: 'utc',
 };
 
+const CLIENTS = ['simple', 'spa', 'oop'];
+
 (async () => {
+  const folderName = `client-${process.argv[2] || 'oop'}`;
+  const staticPath = path.join(__dirname, `../${folderName}`);
+  const stats = stat(staticPath);
+  if (!stats.isDirectory) {
+    console.error(`Cannot serve a client from non-existing folder: ${folderName}`);
+  }
+
   const conn = new MyConnection(CONNECTION_CONFIG);
 
   await seedDb(conn);
@@ -29,9 +42,9 @@ const CONNECTION_CONFIG = {
   app.use('/lists', todoListsRouter(conn));
   app.use('/todos', todoItemsRouter(conn));
 
-  app.use(express.static(path.join(__dirname, '../client-oop')));
+  app.use(express.static(staticPath));
 
   app.listen(PORT, () => {
-    console.log(`server listening on port ${PORT}`);
+    console.log(`server listening on port ${PORT}, using client from folder ${folderName}.`);
   });
 })();
