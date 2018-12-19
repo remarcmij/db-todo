@@ -1,14 +1,11 @@
 'use strict';
-/* eslint-disable camelcase */
 
 {
   const ui = {
     editModal: {},
   };
 
-  const state = {
-    editMode: false,
-  };
+  const state = {};
 
   function createAndAppend(name, parent, options = {}) {
     const elem = document.createElement(name);
@@ -36,10 +33,16 @@
   }
 
   function fetchJSON(url, options = {}) {
-    options.headers = {
-      'Content-Type': 'application/json; charset=utf-8',
-    };
-    return fetch(url, options).then(response => {
+    const fetchOptions = Object.assign(
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8',
+        },
+      },
+      options,
+    );
+    return fetch(url, fetchOptions).then(response => {
       if (response.ok) {
         return response.json();
       } else {

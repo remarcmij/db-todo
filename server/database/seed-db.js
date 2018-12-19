@@ -23,34 +23,38 @@ const CREATE_TODO_ITEMS_TABLE = `
   )`;
 
 async function seedDb(conn) {
-  await conn.execQuery(CREATE_TODO_LISTS_TABLE);
-  await conn.execQuery(CREATE_TODO_ITEMS_TABLE);
+  try {
+    await conn.execQuery(CREATE_TODO_LISTS_TABLE);
+    await conn.execQuery(CREATE_TODO_ITEMS_TABLE);
 
-  const [listResult] = await conn.execQuery('SELECT COUNT(*) as num FROM todo_lists');
-  if (listResult.num === 0) {
-    const data = await readFile(__dirname + '/seed.json', 'utf8');
-    const seeds = JSON.parse(data);
+    const [listResult] = await conn.execQuery('SELECT COUNT(*) as num FROM todo_lists');
+    if (listResult.num === 0) {
+      const data = await readFile(__dirname + '/seed.json', 'utf8');
+      const seeds = JSON.parse(data);
 
-    const todoLists = seeds.map(seed => seed.list);
-    const uniqueTodoLists = new Set(todoLists);
+      const todoLists = seeds.map(seed => seed.list);
+      const uniqueTodoLists = new Set(todoLists);
 
-    uniqueTodoLists.forEach(async todoList => {
-      const result = await conn.execQuery(
-        'INSERT INTO todo_lists (description) VALUES(?)',
-        todoList,
-      );
-      seeds
-        .filter(seed => seed.list === todoList)
-        .map(todo => ({
-          description: todo.description,
-          due_date: todo.due_date,
-          done: todo.done,
-          list_id: result.insertId,
-        }))
-        .forEach(async todo => {
-          await conn.execQuery('INSERT INTO todo_items SET ?', todo);
-        });
-    });
+      uniqueTodoLists.forEach(async todoList => {
+        const result = await conn.execQuery(
+          'INSERT INTO todo_lists (description) VALUES(?)',
+          todoList,
+        );
+        seeds
+          .filter(seed => seed.list === todoList)
+          .map(todo => ({
+            description: todo.description,
+            due_date: todo.due_date,
+            done: todo.done,
+            list_id: result.insertId,
+          }))
+          .forEach(async todo => {
+            await conn.execQuery('INSERT INTO todo_items SET ?', todo);
+          });
+      });
+    }
+  } catch (error) {
+    console.error(`There was an error seeding the database: ${error.message}`);
   }
 }
 

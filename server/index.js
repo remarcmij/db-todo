@@ -29,7 +29,7 @@ const CONNECTION_CONFIG = {
   app.use('/lists', todoListsRouter(conn));
   app.use('/todos', todoItemsRouter(conn));
 
-  app.use(express.static(path.join(__dirname, '../client')));
+  app.use(express.static(path.join(__dirname, '../client-oop')));
 
   app.listen(PORT, () => {
     console.log(`server listening on port ${PORT}`);
