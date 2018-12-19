@@ -39,9 +39,9 @@ class View {
     button.addEventListener('click', () => this.todoEditModal.edit());
   }
 
-  updateListSelectorContent() {
+  updateListSelectorContent(todoLists) {
     Helper.clearContainer(this.listSelector);
-    this.model.todoLists.forEach(list => {
+    todoLists.forEach(list => {
       Helper.createAndAppend('option', this.listSelector, {
         value: list.id,
         text: list.description,
@@ -49,23 +49,23 @@ class View {
     });
   }
 
-  updateTodoItems() {
+  updateTodoItems(todoItems) {
     Helper.clearContainer(this.todoListContainer);
-    this.model.todoItems
+    todoItems
       .map(todo => new TodoListItem(todo, this.model, () => this.todoEditModal.edit(todo)))
       .forEach(todoListItem => todoListItem.render(this.todoListContainer));
   }
 
   update(action) {
-    switch (action) {
+    switch (action.type) {
       case Model.TODO_LISTS_FETCHED:
-        this.updateListSelectorContent();
+        this.updateListSelectorContent(action.payload);
         break;
       case Model.TODO_ITEMS_FETCHED:
-        this.updateTodoItems();
+        this.updateTodoItems(action.payload);
         break;
       case Model.FETCH_ERROR:
-        this.renderError(this.model.lastError);
+        this.renderError(action.payload);
         break;
       default:
         console.error(`Unknown action: ${action}`);

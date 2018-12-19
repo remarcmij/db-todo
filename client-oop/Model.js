@@ -43,14 +43,22 @@ class Model {
     this.observers.forEach(observer => observer.update(action));
   }
 
+  notifyError(error) {
+    this.lastError = error;
+    this.notify({ type: Model.FETCH_ERROR, payload: error });
+  }
+
+  notifyTodoItemsFetched() {
+    this.notify({ type: Model.TODO_ITEMS_FETCHED, payload: this.todoItems });
+  }
+
   async loadTodoLists() {
     try {
       this.lastError = null;
       this.todoLists = await Model.fetchJSON('/lists');
-      this.notify(Model.TODO_LISTS_FETCHED);
+      this.notify({ type: Model.TODO_LISTS_FETCHED, payload: this.todoLists });
     } catch (error) {
-      this.lastError = error;
-      this.notify(Model.FETCH_ERROR);
+      this.notifyError(error);
     }
   }
 
@@ -59,10 +67,9 @@ class Model {
       this.currentListId = listId;
       this.lastError = null;
       this.todoItems = await Model.fetchJSON(`/todos?listId=${this.currentListId}`);
-      this.notify(Model.TODO_ITEMS_FETCHED);
+      this.notifyTodoItemsFetched();
     } catch (error) {
-      this.lastError = error;
-      this.notify(Model.FETCH_ERROR);
+      this.notifyError(error);
     }
   }
 
@@ -77,10 +84,9 @@ class Model {
         method: todoData.id ? 'PATCH' : 'POST',
         body: JSON.stringify(todoData),
       });
-      this.notify(Model.TODO_ITEMS_FETCHED);
+      this.notifyTodoItemsFetched();
     } catch (error) {
-      this.lastError = error;
-      this.notify(Model.FETCH_ERROR);
+      this.notifyError(error);
     }
   }
 
@@ -89,10 +95,9 @@ class Model {
       this.todoItems = await Model.fetchJSON(`/todos/${todo.id}?listId=${this.currentListId}`, {
         method: 'DELETE',
       });
-      this.notify(Model.TODO_ITEMS_FETCHED);
+      this.notifyTodoItemsFetched();
     } catch (error) {
-      this.lastError = error;
-      this.notify(Model.FETCH_ERROR);
+      this.notifyError(error);
     }
   }
 }
