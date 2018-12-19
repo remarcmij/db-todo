@@ -5,7 +5,6 @@
 class TodoEditModal {
   constructor(onSave) {
     this.onSave = onSave;
-    this.todo;
   }
 
   render(parentContainer) {
