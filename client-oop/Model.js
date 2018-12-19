@@ -20,6 +20,7 @@ class Model {
       }
     });
   }
+
   constructor() {
     this.observers = new Set();
     this.todoLists = [];
@@ -65,16 +66,15 @@ class Model {
     }
   }
 
-  async persistTodo(todo) {
+  async saveTodo(todo) {
     const todoData = Object.assign({}, todo, {
       due_date: todo.due_date ? todo.due_date.slice(0, 10) : null,
       list_id: todo.list_id || this.currentListId,
     });
 
-    const method = todoData.id ? 'PATCH' : 'POST';
     try {
-      this.todoItems = await Model.fetchJSON(`/todos?listId=${this.currentListId}`, {
-        method,
+      this.todoItems = await Model.fetchJSON(`/todos`, {
+        method: todoData.id ? 'PATCH' : 'POST',
         body: JSON.stringify(todoData),
       });
       this.notify(Model.TODO_ITEMS_FETCHED);

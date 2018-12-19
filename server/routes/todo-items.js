@@ -12,10 +12,9 @@ module.exports = function(conn) {
     }
   }
 
-  async function addTodoItem(req, res) {
+  async function createTodoItem(req, res) {
     try {
-      const { listId } = req.query;
-      const lists = await db.createTodoItem(conn, req.body, +listId);
+      const lists = await db.createTodoItem(conn, req.body);
       res.json(lists);
     } catch (err) {
       res.status(500).json(err);
@@ -24,8 +23,7 @@ module.exports = function(conn) {
 
   async function updateTodoItem(req, res) {
     try {
-      const { listId } = req.query;
-      const lists = await db.updateTodoItem(conn, req.body, +listId);
+      const lists = await db.updateTodoItem(conn, req.body);
       res.json(lists);
     } catch (err) {
       res.status(500).json(err);
@@ -47,7 +45,7 @@ module.exports = function(conn) {
   router
     .get('/', getTodoItems)
     .patch('/', updateTodoItem)
-    .post('/', addTodoItem)
+    .post('/', createTodoItem)
     .delete('/:id', deleteTodoItem);
 
   return router;

@@ -51,7 +51,7 @@
     });
   }
 
-  async function persistTodo(todo) {
+  async function saveTodo(todo) {
     const todoData = Object.assign({}, todo, {
       due_date: todo.due_date ? todo.due_date.slice(0, 10) : null,
       list_id: todo.list_id || state.listId,
@@ -87,7 +87,7 @@
     const checkBox = createAndAppend('input', parent, checkboxOptions);
     checkBox.addEventListener('change', async () => {
       todo.done = todo.done === 'n' ? 'y' : 'n';
-      persistTodo(todo);
+      saveTodo(todo);
     });
   }
 
@@ -182,7 +182,7 @@
       state.currentTodo.description = ui.editModal.textInput.value;
       state.currentTodo.due_date = ui.editModal.dateInput.value;
       ui.editModal.overlay.style.display = 'none';
-      persistTodo(state.currentTodo);
+      saveTodo(state.currentTodo);
     });
 
     ui.editModal.textInput.addEventListener('input', () => updateSaveButtonState());

@@ -1,5 +1,6 @@
 const util = require('util');
 const fs = require('fs');
+const path = require('path');
 
 const readFile = util.promisify(fs.readFile);
 
@@ -29,7 +30,7 @@ async function seedDb(conn) {
 
     const [listResult] = await conn.execQuery('SELECT COUNT(*) as num FROM todo_lists');
     if (listResult.num === 0) {
-      const data = await readFile(__dirname + '/seed.json', 'utf8');
+      const data = await readFile(path.join(__dirname, '../data/seed.json'), 'utf8');
       const seeds = JSON.parse(data);
 
       const todoLists = seeds.map(seed => seed.list);

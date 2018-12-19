@@ -1,5 +1,5 @@
 'use strict';
-/* global View */
+/* global Helper */
 
 // eslint-disable-next-line no-unused-vars
 class TodoEditModal {
@@ -10,31 +10,31 @@ class TodoEditModal {
   }
 
   render(parentContainer) {
-    this.overlay = View.createAndAppend('div', parentContainer, { class: 'modal' });
-    const modalContent = View.createAndAppend('div', this.overlay, { class: 'modal-content' });
-    this.title = View.createAndAppend('div', modalContent, { class: 'modal-title' });
-    const body = View.createAndAppend('div', modalContent, { class: 'modal-body' });
+    this.overlay = Helper.createAndAppend('div', parentContainer, { class: 'modal' });
+    const modalContent = Helper.createAndAppend('div', this.overlay, { class: 'modal-content' });
+    this.title = Helper.createAndAppend('div', modalContent, { class: 'modal-title' });
+    const body = Helper.createAndAppend('div', modalContent, { class: 'modal-body' });
 
-    this.textInput = View.createAndAppend('input', body, {
+    this.textInput = Helper.createAndAppend('input', body, {
       type: 'text',
       class: 'edit-text-input',
     });
 
-    this.dateInput = View.createAndAppend('input', body, {
+    this.dateInput = Helper.createAndAppend('input', body, {
       type: 'date',
       class: 'edit-date-input',
     });
 
-    const buttonContainer = View.createAndAppend('div', modalContent, {
+    const buttonContainer = Helper.createAndAppend('div', modalContent, {
       class: 'modal-buttons',
     });
 
-    this.saveButton = View.renderButton('SAVE', buttonContainer, () => {
+    this.saveButton = Helper.renderButton('SAVE', buttonContainer, () => {
       const todo = Object.assign({}, this.todo, {
         description: this.textInput.value,
         due_date: this.dateInput.value,
       });
-      this.model.persistTodo(todo);
+      this.model.saveTodo(todo);
       this.overlay.style.display = 'none';
     });
 
