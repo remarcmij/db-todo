@@ -52,7 +52,15 @@ class View {
   updateTodoItems(todoItems) {
     Helper.clearContainer(this.todoListContainer);
     todoItems
-      .map(todo => new TodoListItem(todo, this.model, () => this.todoEditModal.edit(todo)))
+      .map(
+        todo =>
+          new TodoListItem({
+            todo,
+            onSave: () => this.model.saveTodo(todo),
+            onDelete: () => this.model.deleteTodo(todo),
+            onEdit: () => this.todoEditModal.edit(todo),
+          }),
+      )
       .forEach(todoListItem => todoListItem.render(this.todoListContainer));
   }
 

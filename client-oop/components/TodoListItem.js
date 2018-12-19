@@ -4,14 +4,13 @@
 
 // eslint-disable-next-line no-unused-vars
 class TodoListItem {
-  constructor(todo, model, onEdit) {
-    this.todo = todo;
-    this.model = model;
-    this.onEdit = onEdit;
+  constructor(props) {
+    this.props = props;
   }
 
   renderCheckbox(parent) {
-    const checkboxId = `todo-${this.todo.id}`;
+    const { todo, onSave } = this.props;
+    const checkboxId = `todo-${todo.id}`;
     Helper.createAndAppend('label', parent, {
       text: 'Done',
       for: checkboxId,
@@ -20,22 +19,22 @@ class TodoListItem {
     const checkboxOptions = {
       type: 'checkbox',
       id: checkboxId,
-      'data-todo-id': this.todo.id,
+      'data-todo-id': todo.id,
     };
-    if (this.todo.done === 'y') {
+    if (todo.done === 'y') {
       checkboxOptions.checked = '';
     }
     const checkBox = Helper.createAndAppend('input', parent, checkboxOptions);
     checkBox.addEventListener('change', async () => {
-      this.todo.done = this.todo.done === 'n' ? 'y' : 'n';
-      this.model.saveTodo(this.todo);
+      todo.done = todo.done === 'n' ? 'y' : 'n';
+      onSave();
     });
   }
 
   renderTodoDeleteButton(parent) {
     Helper.renderButton('DELETE', parent, async () => {
       if (confirm('Deleting todo: please confirm')) {
-        this.model.deleteTodo(this.todo);
+        this.props.onDelete();
       }
     });
   }
@@ -46,19 +45,21 @@ class TodoListItem {
       class: 'todo-list-item-container',
     });
 
+    const { todo, onEdit } = this.props;
+
     Helper.createAndAppend('div', containerDiv, {
-      text: this.todo.description,
-      class: this.todo.done === 'y' ? 'todo-list-item-done' : '',
+      text: todo.description,
+      class: todo.done === 'y' ? 'todo-list-item-done' : '',
     });
 
     const rightPart = Helper.createAndAppend('div', containerDiv, {
       class: 'todo-list-item-right',
     });
-    const dateString = this.todo.due_date ? new Date(this.todo.due_date).toLocaleDateString() : '';
+    const dateString = todo.due_date ? new Date(todo.due_date).toLocaleDateString() : '';
     Helper.createAndAppend('div', rightPart, { text: dateString, class: 'todo-list-due-date' });
 
-    this.renderTodoDeleteButton(rightPart, this.todo);
-    Helper.renderButton('EDIT', rightPart, this.onEdit);
+    this.renderTodoDeleteButton(rightPart);
+    Helper.renderButton('EDIT', rightPart, onEdit);
     this.renderCheckbox(rightPart);
   }
 }
