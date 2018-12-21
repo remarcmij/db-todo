@@ -8,7 +8,7 @@ There are three different client versions:
 | ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | simple | A version with hard-coded HTML for the unchanging part of the web page and JavaScript generated HTML for the changing parts.                                               |
 | spa    | All HTML (except for an initial `root` div) is generated through JavaScript.                                                                                               |
-| oop    | Similar to `spa`, but now using OOP, with a Model and a View. The View subscribes to the Model through an Observer pattern. The code is distributed across multiple files. |
+| oop    | Similar to `spa`, but now using OOP, with a Store and a View. The View subscribes to the Store through an Observer pattern. The code is distributed across multiple files. |
 
 ## Installation
 

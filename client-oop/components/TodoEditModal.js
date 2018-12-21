@@ -1,14 +1,24 @@
 'use strict';
-/* global Helper */
+/* global Store, Helper */
 
 // eslint-disable-next-line no-unused-vars
 class TodoEditModal {
-  constructor(onSave) {
-    this.onSave = onSave;
+  constructor(store, parent) {
+    this.store = store;
+    this.parent = parent;
+    this.store.subscribe(this);
   }
 
-  render(parentContainer) {
-    this.overlay = Helper.createAndAppend('div', parentContainer, { class: 'modal' });
+  update(action) {
+    switch (action.type) {
+      case Store.OPEN_EDIT_DIALOG:
+        this.edit(action.payload);
+        break;
+    }
+  }
+
+  render() {
+    this.overlay = Helper.createAndAppend('div', this.parent, { class: 'modal' });
     const modalContent = Helper.createAndAppend('div', this.overlay, { class: 'modal-content' });
     this.title = Helper.createAndAppend('div', modalContent, { class: 'modal-title' });
     const body = Helper.createAndAppend('div', modalContent, { class: 'modal-body' });
@@ -32,7 +42,7 @@ class TodoEditModal {
         description: this.textInput.value,
         due_date: this.dateInput.value,
       });
-      this.onSave(todo);
+      this.store.saveTodo(todo);
       this.overlay.style.display = 'none';
     });
 

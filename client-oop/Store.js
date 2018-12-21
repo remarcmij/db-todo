@@ -1,7 +1,7 @@
 'use strict';
 
 // eslint-disable-next-line no-unused-vars
-class Model {
+class Store {
   static fetchJSON(url, options = {}) {
     const fetchOptions = Object.assign(
       {
@@ -45,18 +45,18 @@ class Model {
 
   notifyError(error) {
     this.lastError = error;
-    this.notify({ type: Model.FETCH_ERROR, payload: error });
+    this.notify({ type: Store.FETCH_ERROR, payload: error });
   }
 
   notifyTodoItemsFetched() {
-    this.notify({ type: Model.TODO_ITEMS_FETCHED, payload: this.todoItems });
+    this.notify({ type: Store.TODO_ITEMS_FETCHED, payload: this.todoItems });
   }
 
   async loadTodoLists() {
     try {
       this.lastError = null;
-      this.todoLists = await Model.fetchJSON('/lists');
-      this.notify({ type: Model.TODO_LISTS_FETCHED, payload: this.todoLists });
+      this.todoLists = await Store.fetchJSON('/lists');
+      this.notify({ type: Store.TODO_LISTS_FETCHED, payload: this.todoLists });
     } catch (error) {
       this.notifyError(error);
     }
@@ -66,7 +66,7 @@ class Model {
     try {
       this.currentListId = listId;
       this.lastError = null;
-      this.todoItems = await Model.fetchJSON(`/todos?listId=${this.currentListId}`);
+      this.todoItems = await Store.fetchJSON(`/todos?listId=${this.currentListId}`);
       this.notifyTodoItemsFetched();
     } catch (error) {
       this.notifyError(error);
@@ -80,7 +80,7 @@ class Model {
     });
 
     try {
-      this.todoItems = await Model.fetchJSON(`/todos`, {
+      this.todoItems = await Store.fetchJSON(`/todos`, {
         method: todoData.id ? 'PATCH' : 'POST',
         body: JSON.stringify(todoData),
       });
@@ -92,7 +92,7 @@ class Model {
 
   async deleteTodo(todo) {
     try {
-      this.todoItems = await Model.fetchJSON(`/todos/${todo.id}?listId=${this.currentListId}`, {
+      this.todoItems = await Store.fetchJSON(`/todos/${todo.id}?listId=${this.currentListId}`, {
         method: 'DELETE',
       });
       this.notifyTodoItemsFetched();
@@ -100,8 +100,14 @@ class Model {
       this.notifyError(error);
     }
   }
+
+  editTodo(todo = {}) {
+    this.notify({ type: Store.OPEN_EDIT_DIALOG, payload: todo });
+  }
 }
 
-Model.TODO_LISTS_FETCHED = 'TODO_LISTS_FETCHED';
-Model.TODO_ITEMS_FETCHED = 'TODO_ITEMS_FETCHED';
-Model.FETCH_ERROR = 'FETCH_ERROR';
+Store.TODO_LISTS_FETCHED = 'TODO_LISTS_FETCHED';
+Store.TODO_ITEMS_FETCHED = 'TODO_ITEMS_FETCHED';
+Store.FETCH_ERROR = 'FETCH_ERROR';
+Store.OPEN_EDIT_DIALOG = 'OPEN_EDIT_DIALOG';
+Store.CLOSE_EDIT_DIALOG = 'CLOSE_EDIT_DIALOG';

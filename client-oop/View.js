@@ -1,11 +1,11 @@
 'use strict';
-/* global Model, TodoListItem, TodoEditModal, Helper */
+/* global Store, TodoListItem, TodoEditModal, Helper */
 
 // eslint-disable-next-line no-unused-vars
 class View {
-  constructor(model) {
-    this.model = model;
-    this.model.subscribe(this);
+  constructor(store) {
+    this.store = store;
+    this.store.subscribe(this);
   }
 
   renderPage() {
@@ -14,8 +14,8 @@ class View {
     this.mainContainer = Helper.createAndAppend('div', root);
     this.todoListContainer = Helper.createAndAppend('ul', this.mainContainer);
 
-    this.todoEditModal = new TodoEditModal(todo => this.model.saveTodo(todo));
-    this.todoEditModal.render(this.mainContainer);
+    this.todoEditModal = new TodoEditModal(this.store, this.mainContainer);
+    this.todoEditModal.render();
   }
 
   renderError(error) {
@@ -30,13 +30,13 @@ class View {
     const header = Helper.createAndAppend('header', root, { class: 'header' });
     this.listSelector = Helper.createAndAppend('select', header, { class: 'todo-list-selector' });
     this.listSelector.addEventListener('change', event => {
-      this.model.loadTodoItems(event.target.value);
+      this.store.loadTodoItems(event.target.value);
     });
     const button = Helper.createAndAppend('button', header, {
       text: 'ADD TODO',
       class: 'button',
     });
-    button.addEventListener('click', () => this.todoEditModal.edit());
+    button.addEventListener('click', () => this.store.editTodo());
   }
 
   updateListSelectorContent(todoLists) {
@@ -56,9 +56,9 @@ class View {
         todo =>
           new TodoListItem({
             todo,
-            onSave: () => this.model.saveTodo(todo),
-            onDelete: () => this.model.deleteTodo(todo),
-            onEdit: () => this.todoEditModal.edit(todo),
+            onSave: () => this.store.saveTodo(todo),
+            onDelete: () => this.store.deleteTodo(todo),
+            onEdit: () => this.store.editTodo(todo),
           }),
       )
       .forEach(todoListItem => todoListItem.render(this.todoListContainer));
@@ -66,17 +66,15 @@ class View {
 
   update(action) {
     switch (action.type) {
-      case Model.TODO_LISTS_FETCHED:
+      case Store.TODO_LISTS_FETCHED:
         this.updateListSelectorContent(action.payload);
         break;
-      case Model.TODO_ITEMS_FETCHED:
+      case Store.TODO_ITEMS_FETCHED:
         this.updateTodoItems(action.payload);
         break;
-      case Model.FETCH_ERROR:
+      case Store.FETCH_ERROR:
         this.renderError(action.payload);
         break;
-      default:
-        console.error(`Unknown action: ${action}`);
     }
   }
 }
