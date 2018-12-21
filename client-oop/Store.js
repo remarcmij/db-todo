@@ -40,6 +40,7 @@ class Store {
   }
 
   notify(action) {
+    console.log(action);
     this.observers.forEach(observer => observer.update(action));
   }
 
