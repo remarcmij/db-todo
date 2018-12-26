@@ -1,7 +1,8 @@
 'use strict';
+/* global Observer */
 
 // eslint-disable-next-line no-unused-vars
-class Store {
+class Store extends Observer {
   static fetchJSON(url, options = {}) {
     const fetchOptions = Object.assign(
       {
@@ -22,26 +23,11 @@ class Store {
   }
 
   constructor() {
-    this.observers = new Set();
+    super();
     this.todoLists = [];
     this.todoItems = [];
     this.currentListId = 0;
     this.lastError = null;
-  }
-
-  subscribe(observer) {
-    if (typeof observer.update === 'function') {
-      this.observers.add(observer);
-      return () => this.observers.delete(observer);
-    } else {
-      console.error("Can't subscribe observer without update function");
-      return () => undefined;
-    }
-  }
-
-  notify(action) {
-    console.log(action);
-    this.observers.forEach(observer => observer.update(action));
   }
 
   notifyError(error) {

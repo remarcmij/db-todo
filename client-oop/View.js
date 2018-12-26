@@ -1,5 +1,5 @@
 'use strict';
-/* global Store, TodoListItem, TodoEditModal, Helper */
+/* global Store, TodoListItem, TodoEditModal, ConfirmDialog, Helper */
 
 // eslint-disable-next-line no-unused-vars
 class View {
@@ -16,6 +16,9 @@ class View {
 
     this.todoEditModal = new TodoEditModal(this.store, this.mainContainer);
     this.todoEditModal.render();
+
+    this.confirmDialog = new ConfirmDialog(this.mainContainer);
+    this.confirmDialog.render();
   }
 
   renderError(error) {
@@ -39,6 +42,13 @@ class View {
     button.addEventListener('click', () => this.store.editTodo());
   }
 
+  async handleDeleteTodo(todo) {
+    const confirmed = await this.confirmDialog.confirm(`Delete ${todo.description}?`);
+    if (confirmed) {
+      this.store.deleteTodo(todo);
+    }
+  }
+
   updateListSelectorContent(todoLists) {
     Helper.clearContainer(this.listSelector);
     todoLists.forEach(list => {
@@ -57,7 +67,7 @@ class View {
           new TodoListItem({
             todo,
             onSave: () => this.store.saveTodo(todo),
-            onDelete: () => this.store.deleteTodo(todo),
+            onDelete: () => this.handleDeleteTodo(todo),
             onEdit: () => this.store.editTodo(todo),
           }),
       )

@@ -32,11 +32,7 @@ class TodoListItem {
   }
 
   renderTodoDeleteButton(parent) {
-    Helper.renderButton('DELETE', parent, async () => {
-      if (confirm('Deleting todo: please confirm')) {
-        this.props.onDelete();
-      }
-    });
+    Helper.renderButton('DELETE', parent, this.props.onDelete);
   }
 
   render(listContainer) {

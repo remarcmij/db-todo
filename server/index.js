@@ -24,9 +24,9 @@ const CONNECTION_CONFIG = {
 (async () => {
   const folderName = `client-${process.argv[2] || 'oop'}`;
   const staticPath = path.join(__dirname, `../${folderName}`);
-  const stats = stat(staticPath);
+  const stats = await stat(staticPath);
   if (!stats.isDirectory) {
-    console.error(`Cannot serve a client from non-existing folder: ${folderName}`);
+    throw new Error(`Cannot serve a client from non-existing folder: ${folderName}`);
   }
 
   const conn = new MyConnection(CONNECTION_CONFIG);

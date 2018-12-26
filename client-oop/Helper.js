@@ -8,7 +8,7 @@ class Helper {
     Object.keys(options).forEach(key => {
       const value = options[key];
       if (key === 'text') {
-        elem.innerText = value;
+        elem.textContent = value;
       } else {
         elem.setAttribute(key, value);
       }
@@ -27,7 +27,9 @@ class Helper {
       text: label,
       class: 'button',
     });
-    button.addEventListener('click', clickHandler);
+    if (clickHandler) {
+      button.addEventListener('click', clickHandler);
+    }
     return button;
   }
 }
