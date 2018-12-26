@@ -37,6 +37,8 @@ class TodoEditModal extends ModalDialog {
       this.hide();
     });
 
+    Helper.renderButton('CANCEL', buttonContainer, () => this.hide());
+
     this.textInput.addEventListener('input', () => this.updateSaveButtonState());
   }
 
@@ -55,7 +57,7 @@ class TodoEditModal extends ModalDialog {
     this.updateSaveButtonState();
     const dateString = todo.due_date ? todo.due_date.slice(0, 10) : '';
     this.dateInput.value = dateString;
-    this.show(todo.id ? 'Edit Todo' : 'Add Todo');
+    this.show(todo.id ? 'Edit Task' : 'Add Task');
     this.textInput.focus();
   }
 }

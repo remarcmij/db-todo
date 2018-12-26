@@ -6,36 +6,22 @@
 class ConfirmDialog extends ModalDialog {
   constructor(parent) {
     super(parent);
-    this.handleYes = this.handleYes.bind(this);
-    this.handleNo = this.handleNo.bind(this);
   }
 
   renderContent(contentContainer, buttonContainer) {
     this.bodyTextContainer = Helper.createAndAppend('p', contentContainer);
+
     this.yesButton = Helper.renderButton('YES', buttonContainer);
+    this.yesButton.addEventListener('click', () => this.handleResult(true));
+
     this.noButton = Helper.renderButton('NO', buttonContainer);
-  }
-
-  handleYes() {
-    this.handleResult(true);
-  }
-
-  handleNo() {
-    this.handleResult(false);
-  }
-
-  cancel() {
-    if (this.resolve) {
-      this.handleNo();
-    }
+    this.noButton.addEventListener('click', () => this.handleResult(false));
   }
 
   handleResult(result) {
     this.hide();
     this.resolve(result);
     this.resolve = null;
-    this.yesButton.removeEventListener('click', this.handleYes);
-    this.noButton.removeEventListener('click', this.handleNo);
   }
 
   confirm(bodyText) {
@@ -44,8 +30,6 @@ class ConfirmDialog extends ModalDialog {
       this.bodyTextContainer.textContent = bodyText;
       this.show('Please confirm');
       this.noButton.focus();
-      this.yesButton.addEventListener('click', this.handleYes);
-      this.noButton.addEventListener('click', this.handleNo);
     });
   }
 }

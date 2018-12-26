@@ -36,14 +36,14 @@ class View {
       this.store.loadTodoItems(event.target.value);
     });
     const button = Helper.createAndAppend('button', header, {
-      text: 'ADD TODO',
+      text: 'ADD TASK',
       class: 'button',
     });
     button.addEventListener('click', () => this.store.editTodo());
   }
 
   async handleDeleteTodo(todo) {
-    const confirmed = await this.confirmDialog.confirm(`Delete ${todo.description}?`);
+    const confirmed = await this.confirmDialog.confirm(`Delete task '${todo.description}'?`);
     if (confirmed) {
       this.store.deleteTodo(todo);
     }

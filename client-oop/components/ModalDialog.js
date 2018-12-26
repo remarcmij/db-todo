@@ -17,16 +17,6 @@ class ModalDialog {
     });
 
     this.hide();
-
-    window.onclick = event => {
-      if (event.target === this.overlay) {
-        if (typeof this.cancel === 'function') {
-          this.cancel();
-        }
-        this.hide();
-      }
-    };
-
     this.renderContent(contentContainer, buttonContainer);
   }
 
