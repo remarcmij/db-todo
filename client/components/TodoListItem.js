@@ -24,8 +24,7 @@ class TodoListItem {
     if (todo.done === 'y') {
       checkboxOptions.checked = '';
     }
-    const checkBox = Helper.createAndAppend('input', parent, checkboxOptions);
-    checkBox.addEventListener('change', async () => {
+    Helper.createAndAppend('input', parent, checkboxOptions).addEventListener('change', () => {
       todo.done = todo.done === 'n' ? 'y' : 'n';
       onSave();
     });

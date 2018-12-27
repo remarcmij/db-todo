@@ -11,8 +11,9 @@ class ConfirmDialog extends ModalDialog {
   renderContent(contentContainer, buttonContainer) {
     this.bodyTextContainer = Helper.createAndAppend('p', contentContainer);
 
-    this.yesButton = Helper.renderButton('YES', buttonContainer);
-    this.yesButton.addEventListener('click', () => this.handleResult(true));
+    Helper.renderButton('YES', buttonContainer).addEventListener('click', () =>
+      this.handleResult(true),
+    );
 
     this.noButton = Helper.renderButton('NO', buttonContainer);
     this.noButton.addEventListener('click', () => this.handleResult(false));

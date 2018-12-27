@@ -9,6 +9,8 @@ class ModalDialog {
 
   render() {
     this.overlay = Helper.createAndAppend('div', this.parent, { class: 'modal' });
+    this.hide();
+
     const modalContainer = Helper.createAndAppend('div', this.overlay, { class: 'modal-content' });
     this.title = Helper.createAndAppend('div', modalContainer, { class: 'modal-title' });
     const contentContainer = Helper.createAndAppend('div', modalContainer, { class: 'modal-body' });
@@ -16,7 +18,6 @@ class ModalDialog {
       class: 'modal-buttons',
     });
 
-    this.hide();
     this.renderContent(contentContainer, buttonContainer);
   }
 

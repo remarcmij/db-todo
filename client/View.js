@@ -35,11 +35,10 @@ class View {
     this.listSelector.addEventListener('change', event => {
       this.store.loadTodoItems(event.target.value);
     });
-    const button = Helper.createAndAppend('button', header, {
+    Helper.createAndAppend('button', header, {
       text: 'ADD TASK',
       class: 'button',
-    });
-    button.addEventListener('click', () => this.store.editTodo());
+    }).addEventListener('click', () => this.store.editTodo());
   }
 
   async handleDeleteTodo(todo) {

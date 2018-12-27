@@ -4,10 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon ./server/index.js",
-    "simple": "nodemon ./server/index.js simple",
-    "spa": "nodemon ./server/index.js spa",
-    "oop": "nodemon ./server/index.js oop"
+    "start": "nodemon ./server/index.js"
   },
   "author": "Jim Cramer",
   "license": "ISC",
