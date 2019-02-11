@@ -1,4 +1,5 @@
 'use strict';
+
 /* global Helper */
 
 // eslint-disable-next-line no-unused-vars
@@ -30,7 +31,8 @@ class ModalDialog {
     this.overlay.style.display = 'none';
   }
 
+  // eslint-disable-next-line class-methods-use-this
   renderContent() {
-    throw new Error('subclass must implement ');
+    throw new Error('subclass must implement');
   }
 }

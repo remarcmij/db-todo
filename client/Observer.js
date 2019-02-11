@@ -7,12 +7,11 @@ class Observer {
   }
 
   subscribe(observer) {
-    if (typeof observer.update === 'function') {
-      this.observers.add(observer);
-      return () => this.observers.delete(observer);
-    } else {
+    if (typeof observer.update !== 'function') {
       throw new Error('Subscriber must implement update function');
     }
+    this.observers.add(observer);
+    return () => this.observers.delete(observer);
   }
 
   notify(action) {

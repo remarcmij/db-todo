@@ -1,4 +1,5 @@
 'use strict';
+
 /* global Observer */
 
 // eslint-disable-next-line no-unused-vars
@@ -14,11 +15,10 @@ class Store extends Observer {
       options,
     );
     return fetch(url, fetchOptions).then(response => {
-      if (response.ok) {
-        return response.json();
-      } else {
+      if (!response.ok) {
         throw new Error(`HTTP ${response.status} - ${response.statusText}`);
       }
+      return response.json();
     });
   }
 
