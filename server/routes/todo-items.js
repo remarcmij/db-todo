@@ -1,7 +1,7 @@
 const express = require('express');
 const db = require('../database/todo-items');
 
-module.exports = function(conn) {
+module.exports = conn => {
   async function getTodoItems(req, res) {
     try {
       const { listId } = req.query;

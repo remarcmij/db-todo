@@ -1,4 +1,5 @@
 'use strict';
+
 /* global ModalDialog, Store, Helper */
 
 // eslint-disable-next-line no-unused-vars
@@ -14,6 +15,7 @@ class TodoEditModal extends ModalDialog {
       case Store.OPEN_EDIT_DIALOG:
         this.edit(action.payload);
         break;
+      default:
     }
   }
 

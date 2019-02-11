@@ -1,4 +1,5 @@
 'use strict';
+
 /* global Store, TodoListItem, TodoEditModal, ConfirmDialog, Helper */
 
 // eslint-disable-next-line no-unused-vars
@@ -84,6 +85,7 @@ class View {
       case Store.FETCH_ERROR:
         this.renderError(action.payload);
         break;
+      default:
     }
   }
 }

@@ -1,13 +1,9 @@
 'use strict';
-'use strict';
+
 /* global ModalDialog, Helper */
 
 // eslint-disable-next-line no-unused-vars
 class ConfirmDialog extends ModalDialog {
-  constructor(parent) {
-    super(parent);
-  }
-
   renderContent(contentContainer, buttonContainer) {
     this.bodyTextContainer = Helper.createAndAppend('p', contentContainer);
 

@@ -1,7 +1,7 @@
 const express = require('express');
 const db = require('../database/todo-lists');
 
-module.exports = function(conn) {
+module.exports = conn => {
   async function getTodoLists(_, res) {
     try {
       const lists = await db.getTodoLists(conn);
